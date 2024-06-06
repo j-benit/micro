@@ -14,19 +14,13 @@ app.use(cors({
 
 getConnection()
 
-const tipoProyectos = require('./routes/tipoProyecto')
-const clientes = require('./routes/cliente')
-const etapas = require("./routes/etapas")
 const proyecto = require("./routes/proyecto")
-const universidad = require("./routes/universidad")
+
 
 // middlewares
 
-app.use('/tiposproyectos', tipoProyectos)
-app.use('/clientes', clientes)
-app.use('/etapas', etapas)
+
 app.use('/proyecto', proyecto)
-app.use('/universidad', universidad)
 
 
 module.exports = app
