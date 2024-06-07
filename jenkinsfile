@@ -1,0 +1,36 @@
+pipeline {
+
+    agent any
+
+
+    stages{
+
+        stage("clonacion del repositorio"){
+
+            steps {
+                   //clonamos el repositorio
+            }
+
+        }
+
+        // opcional porque se puede hacer con el docker compose
+        stage("construccion de la imagen de docker"){
+            steps{
+
+                // comando d edocker para el build
+
+            }
+        }
+        stage("despliegue container docker") {
+            steps{
+                //docker compose up -d
+            }
+        }
+    }
+
+   post {
+     always {
+        // envie el emnail de confirmacion 
+     }
+   }
+}

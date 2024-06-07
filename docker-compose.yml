@@ -1,0 +1,50 @@
+services:
+  proyectos-micro:
+    container_name : "proyectos-micro"
+    image: proyectos-micro:v1
+    build:
+      context: .
+    ports:
+      - "3003"
+    networks:
+      - proyectos-app
+    environment:
+     CONTAINER_HOST: proyectos-micro
+      
+  proyectos-micro-1 :
+    container_name : "proyectos-micro-1"
+    image : proyectos-micro:v1
+    ports : 
+      - "3003"
+    networks :
+      - proyectos-app
+    environment:
+     CONTAINER_HOST: proyectos-micro-1
+
+  proyectos-micro-2 :
+    container_name : "proyectos-micro-2"
+    image : proyectos-micro:v1
+    ports : 
+      - "3003"
+    networks :
+      - proyectos-app  
+    environment:
+      CONTAINER_HOST: proyectos-micro-2
+
+  balanceador :
+    container_name : balanceador
+    image : balanceador:v1
+    build :
+      context: ./balanceador
+    ports : 
+      - "3000:80"
+    networks :
+      - proyectos-app
+    depends_on:
+      - proyectos-micro
+      - proyectos-micro-1
+      - proyectos-micro-2
+    restart: always
+networks:
+
+  proyectos-app:
