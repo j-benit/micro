@@ -9,6 +9,7 @@ pipeline {
 
             steps {
                    //clonamos el repositorio
+                    git branch: 'main', url: 'https://github.com/j-benit/micro.git'
             }
 
         }
@@ -18,12 +19,26 @@ pipeline {
             steps{
 
                 // comando d edocker para el build
+                 script {
+                    withCredentials([
+                        string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
+                    ]) {
+                        docker.build('proyectos-micro:v1', '--build-arg BASE_URL=${BASE_URL} .')
+                        }
 
             }
+          }
         }
         stage("despliegue container docker") {
             steps{
                 //docker compose up -d
+                    script {
+                    withCredentials([
+                            string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
+                    ]) {
+                        sh 'docker-compose up -d'
+                    }
+                }
             }
         }
     }
@@ -31,6 +46,12 @@ pipeline {
    post {
      always {
         // envie el emnail de confirmacion 
+         emailext (
+                subject: "Status del build: ${currentBuild.currentResult}",
+                body: "Se ha completado el build. Puede detallar en: ${env.BUILD_URL}",
+                to: "indira.hamdam@est.iudigital.edu.co",
+                from: "jenkins@iudigital.edu.co"
+            )
      }
    }
 }
