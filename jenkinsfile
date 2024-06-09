@@ -14,21 +14,7 @@ pipeline {
 
         }
 
-        // opcional porque se puede hacer con el docker compose
-        stage("construccion de la imagen de docker"){
-            steps{
-
-                // comando d edocker para el build
-                 script {
-                    withCredentials([
-                        string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
-                    ]) {
-                        docker.build('proyectos-micro:v1', '--build-arg BASE_URL=${BASE_URL} .')
-                        }
-
-            }
-          }
-        }
+    
         stage("despliegue container docker") {
             steps{
                 //docker compose up -d
