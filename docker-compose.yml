@@ -10,7 +10,8 @@ services:
     networks:
       - proyectos-app
     environment:
-     CONTAINER_HOST: proyectos-micro
+      - BASE_URL=${BASE_URL}
+      - PORT=3003
       
   proyectos-micro-1 :
     container_name : "proyectos-micro-1"
@@ -19,8 +20,9 @@ services:
       - "3003"
     networks :
       - proyectos-app
-    environment:
-     CONTAINER_HOST: proyectos-micro-1
+     environment:
+      - BASE_URL=${BASE_URL}
+      - PORT=3003
 
   proyectos-micro-2 :
     container_name : "proyectos-micro-2"
@@ -29,8 +31,9 @@ services:
       - "3003"
     networks :
       - proyectos-app  
-    environment:
-      CONTAINER_HOST: proyectos-micro-2
+     environment:
+      - BASE_URL=${BASE_URL}
+      - PORT=3003
 
   balanceador :
     container_name : balanceador
@@ -41,11 +44,7 @@ services:
       - "3000:80"
     networks :
       - proyectos-app
-    depends_on:
-      - proyectos-micro
-      - proyectos-micro-1
-      - proyectos-micro-2
-    restart: always
+    
 networks:
 
   proyectos-app:
