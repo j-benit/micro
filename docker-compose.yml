@@ -1,3 +1,4 @@
+version : "3.7"
 services:
   proyectos-micro:
     container_name : "proyectos-micro"
