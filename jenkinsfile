@@ -1,52 +1,49 @@
 pipeline {
-
     agent any
-
-    stages{
-
-        stage("clonacion del repositorio"){
-
+    environment {
+        DOCKER_IMAGE = 'proyectos-micro:v1'
+    }
+    stages {
+        stage("clonacion del repositorio") {
             steps {
-                   //clonamos el repositorio
-                    git branch: 'main', url: 'https://github.com/j-benit/micro.git'
+                // Clonar el repositorio
+                git branch: 'main', url: 'https://github.com/j-benit/micro.git'
             }
-
         }
-stage('Construir imagen de Docker'){
+        stage('Construir imagen de Docker') {
             steps {
                 script {
                     withCredentials([
                         string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
                     ]) {
-                        docker.build('proyectos-micro:v1', '--build-arg BASE_URL=${BASE_URL} .')
+                        // Construir la imagen de Docker
+                        docker.build(env.DOCKER_IMAGE, "--build-arg BASE_URL=${BASE_URL} .")
                     }
                 }
             }
         }
-    
         stage("despliegue container docker") {
-            steps{
-                //docker compose up -d
-                    script {
+            steps {
+                script {
                     withCredentials([
-                            string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
+                        string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
                     ]) {
+                        // Desplegar el contenedor Docker
                         sh 'docker-compose up -d'
                     }
                 }
             }
         }
     }
-
-   post {
-     always {
-        // envie el emnail de confirmacion 
-         emailext (
+    post {
+        always {
+            // Enviar el correo electrónico de confirmación
+            emailext (
                 subject: "Status del build: ${currentBuild.currentResult}",
                 body: "Se ha completado el build. Puede detallar en: ${env.BUILD_URL}",
                 to: "jhon.benitez@est.iudigital.edu.co",
                 from: "jenkins@iudigital.edu.co"
             )
-     }
-   }
+        }
+    }
 }
