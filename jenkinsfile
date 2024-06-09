@@ -13,7 +13,17 @@ pipeline {
             }
 
         }
-
+stage('Construir imagen de Docker'){
+            steps {
+                script {
+                    withCredentials([
+                        string(credentialsId: 'BASE_URL', variable: 'BASE_URL')
+                    ]) {
+                        docker.build('proyectos-micro:v1', '--build-arg BASE_URL=${BASE_URL} .')
+                    }
+                }
+            }
+        }
     
         stage("despliegue container docker") {
             steps{
